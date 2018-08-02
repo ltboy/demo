@@ -1,0 +1,7 @@
+<div (click)="propagationHandle($event)">
+  <input [class]="'el-date-editor ' + 'el-date-editor--' + type" [readonly]="!editable || readonly" (modelChange)="changeHandle($event)"
+    (focus)="focusHandle()" [(ngModel)]="model" />
+  <el-data-picker-panel [show]="showPanelPicker" [hidden-day]="hiddenDay" [panel-absolute]="panelAbsolute" [panel-index]="panelIndex"
+    [width]="panelWidth" [model]="value" (modelChange)="dateChangeHandle($event)">
+  </el-data-picker-panel>
+</div>

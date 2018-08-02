@@ -1,0 +1,38 @@
+<div [ngStyle]="{ width: width ? width + 'px' : 'auto', 'z-index': panelIndex}" [class]="'datepicker-panel datepicker'"
+  [class.has-time]="showTime" [class.datepicker-panel-absolute]="panelAbsolute" [class.datepick-panel-show]="show">
+  <div class="datepicker-panel__body-wrapper">
+    <div class="datepicker-panel__body">
+      <div class="datepicker__header">
+        <button class="datepicker-panel__icon-btn datepicker__prev-btn el-icon-d-arrow-left" type="button" (click)="nextYear(-1)"><<
+        </button>
+        <button class="datepicker-panel__icon-btn datepicker__prev-btn el-icon-arrow-left" type="button" (click)="nextMonth(-1)"
+          *ngIf="currentView === 'date'">>>
+        </button>
+
+        <!--year label-->
+        <span class="datepicker__header-label" *ngIf="currentView !== 'year'" (click)="showPicker('year')">{{dateShowModels.year}} 年</span>
+        <!--year range label-->
+        <span class="datepicker__header-label" *ngIf="currentView === 'year'">
+          {{dateShowModels.yearRange[0]}} 年 - {{dateShowModels.yearRange[1]}} 年
+        </span>
+
+        <span class="datepicker__header-label" [class.active]="currentView === 'month'" (click)="showPicker('month')" *ngIf="currentView === 'date'">{{dateShowModels.month + 1}} 月</span>
+        <button class="datepicker-panel__icon-btn datepicker__next-btn el-icon-d-arrow-right" type="button" (click)="nextYear(1)">
+        </button>
+        <button class="datepicker-panel__icon-btn datepicker__next-btn el-icon-arrow-right" type="button" (click)="nextMonth(1)"
+          *ngIf="currentView === 'date'">
+        </button>
+      </div>
+
+      <div class="datepicker-panel__content">
+        <el-date-table *ngIf="currentView === 'date' && !hiddenDay" (modelChange)="datePickChangeHandle($event)" [model]="model">
+        </el-date-table>
+        <el-year-table *ngIf="currentView === 'year'" [model]="model" (modelChange)="yearPickChangeHandle($event)" [disabled-date]="disabledDate">
+        </el-year-table>
+        <el-month-table *ngIf="currentView === 'month'" [model]="model" (modelChange)="monthPickChangeHandle($event)" [disabled-date]="disabledDate">
+        </el-month-table>
+      </div>
+    </div>
+  </div>
+
+</div>

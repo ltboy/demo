@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+
+.el-picker-panel-absolute {
+  position: absolute;
+}
+
+.datepicker-panel {
+  min-width: 280px;
+  opacity: 0;
+  height: 0;
+  border: 0;
+  padding: 0;
+  visibility: hidden;
+  transition: all .3s ease;
+  color: #5a5e66;
+  border: 1px solid #dfe4ed;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+  background: #fff;
+  border-radius: 4px;
+  line-height: 30px;
+  margin: 5px 0;
+}
+
+.datepick-panel-show {
+  opacity: 1;
+  height: auto;
+  visibility: inherit;
+}
+
+.datepicker-panel__content {
+  table {
+    margin: 0 auto;
+  }
+}
+
+.el-date-table td {
+  padding: 5px 10px;
+  box-sizing: border-box;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.el-date-table td span {
+  font-size: 12px;
+  display: block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
