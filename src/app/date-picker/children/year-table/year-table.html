@@ -1,0 +1,8 @@
+<table class="datepick-year-table">
+  <tbody>
+    <tr *ngFor="let years of yearRows">
+      <td class="available" *ngFor="let year of years" [class.current]="year === currentYear" (click)="clickHandle(year)">
+        <span>{{year}}</span>
+      </td>
+    </tr>
+  </tbody>

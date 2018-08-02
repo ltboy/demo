@@ -1,21 +1,32 @@
-import { NgModule, ModuleWithProviders } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms'
-// import { ElInputsModule } from '../input/module'
-import { ElDataPicker } from './picker/picker'
-import { ElDatePickerPanel } from './picker-panel/picker-panel'
-import { ElDateTable } from './children/date-table/date-table'
-import { ElYearTable } from './children/year-table'
-import { EMonthTable } from './children/month-table'
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DataPickerComponent } from './picker/picker';
+import { DatePickerPanelComponent } from './picker-panel/picker-panel';
+import { DateTableComponent } from './children/date-table/date-table';
+import { YearTableComponent } from './children/year-table/year-table';
+import { MonthTableComponent } from './children/month-table/month-table';
 
 @NgModule({
-  declarations: [ElDataPicker, ElDatePickerPanel, ElDateTable, ElYearTable, EMonthTable],
-  exports: [ElDataPicker, ElDatePickerPanel, ElDateTable, ElYearTable, EMonthTable],
+  declarations: [
+    DataPickerComponent,
+    DatePickerPanelComponent,
+    DateTableComponent,
+    YearTableComponent,
+    MonthTableComponent
+  ],
+  exports: [
+    DataPickerComponent,
+    DatePickerPanelComponent,
+    DateTableComponent,
+    YearTableComponent,
+    MonthTableComponent
+  ],
   imports: [CommonModule, FormsModule],
-  entryComponents: [ElDataPicker],
+  entryComponents: [DateTableComponent, YearTableComponent, MonthTableComponent]
 })
 export class ElDateModule {
   static forRoot(): ModuleWithProviders {
-    return { ngModule: ElDateModule, providers: [] }
+    return { ngModule: ElDateModule, providers: [] };
   }
 }

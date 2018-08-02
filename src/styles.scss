@@ -5,10 +5,9 @@
 }
 
 .datepicker-panel {
-  min-width: 280px;
+  width: 280px;
   opacity: 0;
   height: 0;
-  border: 0;
   padding: 0;
   visibility: hidden;
   transition: all .3s ease;
@@ -17,8 +16,8 @@
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
   background: #fff;
   border-radius: 4px;
-  line-height: 30px;
   margin: 5px 0;
+  position: absolute;
 }
 
 .datepick-panel-show {
@@ -32,22 +31,81 @@
     margin: 0 auto;
   }
 }
-
-.el-date-table td {
-  padding: 5px 10px;
-  box-sizing: border-box;
-  text-align: center;
-  cursor: pointer;
-  position: relative;
+.datepicker__header{
+  text-align:center;
+  font-size:12px;
+  line-height:16px;
+  padding:10px 0;
+}
+.datepick-date-table {
+  padding-bottom: 10px
 }
 
-.el-date-table td span {
-  font-size: 12px;
-  display: block;
-  width: 18px;
-  height: 18px;
-  line-height: 18px;
-  text-align: center;
-  border-radius: 50%;
-  box-sizing: border-box;
+.datepick-date-table {
+  th,td {
+    padding: 5px 9px;
+    box-sizing: border-box;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    span {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      border-radius: 50%;
+      box-sizing: border-box;
+      display: inline-block;
+    }
+  }
+}
+
+.datepick-month-table {
+  padding-bottom: 21px;
+  td {
+    padding: 9px 15px;
+    height: 18px;
+    span {
+      height: 18px;
+      width: 28px;
+      border-radius: 10px;
+      line-height: 18px;
+      display: inline-block;
+    }
+  }
+}
+.datepick-year-table{
+  padding-bottom: 21px;
+  td {
+    padding: 9px 11px;
+    height: 18px;
+    span {
+      height: 18px;
+      width: 36px;
+      border-radius: 10px;
+      line-height: 18px;
+      display: inline-block;
+    }
+  }
+}
+
+.datepicker-panel {
+  .col{
+    display:inline-block;
+  }
+  .next-month span,
+  .prev-month span {
+    color: #CCCCCC;
+  }
+  .normal span {
+    color: #222;
+  }
+  .current span {
+    color: #fff;
+    background: #25B8B3;
+  }
+  span {
+    font-size: 12px;
+    text-align: center;
+  }
 }

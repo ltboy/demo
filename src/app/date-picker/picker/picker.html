@@ -1,7 +1,7 @@
 <div (click)="propagationHandle($event)">
-  <input [class]="'el-date-editor ' + 'el-date-editor--' + type" [readonly]="!editable || readonly" (modelChange)="changeHandle($event)"
-    (focus)="focusHandle()" [(ngModel)]="model" />
-  <el-data-picker-panel [show]="showPanelPicker" [hidden-day]="hiddenDay" [panel-absolute]="panelAbsolute" [panel-index]="panelIndex"
-    [width]="panelWidth" [model]="value" (modelChange)="dateChangeHandle($event)">
-  </el-data-picker-panel>
+  <input #datepick [class]="'datepick-editor ' + 'datepick-editor--' + type" [readonly]="!editable || readonly" (modelChange)="changeHandle($event)"
+    (focus)="focusHandle()" [value]="model" (keyup)='changeHandle($event)' placeholder="请输入" />
+  <app-date-picker-panel [show]="showPanelPicker" [hidden-day]="hiddenDay" [panel-absolute]="panelAbsolute" [panel-index]="panelIndex"
+    [model]="value" (modelChange)="dateChangeHandle($event)">
+  </app-date-picker-panel>
 </div>
