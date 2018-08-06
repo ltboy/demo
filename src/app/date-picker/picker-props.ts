@@ -1,6 +1,6 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 
-export class ElDatePickerProps {
+export class DatePickerProps {
   @Input() readonly = false;
   @Input() editable = true;
   @Input() clearable = true;

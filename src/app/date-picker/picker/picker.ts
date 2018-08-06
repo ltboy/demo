@@ -5,29 +5,22 @@ import {
   OnInit,
   Renderer2
 } from '@angular/core';
-import { ElDatePickerProps } from '../picker-props';
+import { DatePickerProps } from '../picker-props';
 import { DateFormat } from '../utils/format';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-date-picker',
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DataPickerComponent),
-      multi: true
-    },
     DateFormat
   ],
   templateUrl: './picker.html'
 })
-export class DataPickerComponent extends ElDatePickerProps
-  implements OnInit, OnDestroy, ControlValueAccessor {
+export class DataPickerComponent extends DatePickerProps
+  implements OnInit, OnDestroy{
   showPanelPicker = false;
   value: number;
   model = '';
-  globalClickListener: Function;
-  globalKeydownListener: Function;
+  fouce = false
   iconShowClose = false;
 
   constructor(private dateFormat: DateFormat, private renderer: Renderer2) {
@@ -66,7 +59,6 @@ export class DataPickerComponent extends ElDatePickerProps
     if (!this.value) {
       this.model = null;
       this.modelChange.emit(null);
-      this.controlChange(null);
       this.showPanelPicker = false;
       return;
     }
@@ -79,11 +71,11 @@ export class DataPickerComponent extends ElDatePickerProps
     this.model = DateFormat.moment(time, this.format);
     this.value = new Date(this.model).getTime();
     this.modelChange.emit(this.model);
-    this.controlChange(this.model);
     this.showPanelPicker = false;
   }
 
   focusHandle(): void {
+    this.fouce = true
     this.showPanelPicker = true;
     this.globalKeydownListener && this.globalKeydownListener();
     this.globalKeydownListener = this.renderer.listen(
@@ -101,15 +93,19 @@ export class DataPickerComponent extends ElDatePickerProps
       }
     );
   }
+  blurHandle(): void {
+    this.fouce = false;
+  }
   // text to time
   ngOnInit(): void {
     this.globalClickListener = this.renderer.listen('document', 'click', () => {
+      if (this.fouce) {
+        return
+      }
       if (!this.showPanelPicker) {
         return;
       }
       this.showPanelPicker = false;
-
-      this.changeOnBlur && this.tryUpdateText();
     });
     // init value
     const time: number = this.dateFormat.getTime(this.model);
@@ -124,19 +120,4 @@ export class DataPickerComponent extends ElDatePickerProps
     this.globalClickListener && this.globalClickListener();
     this.globalKeydownListener && this.globalKeydownListener();
   }
-
-  writeValue(value: any): void {
-    this.model = value;
-  }
-
-  registerOnChange(fn: Function): void {
-    this.controlChange = fn;
-  }
-
-  registerOnTouched(fn: Function): void {
-    this.controlTouch = fn;
-  }
-
-  private controlChange: Function = () => {};
-  private controlTouch: Function = () => {};
 }
