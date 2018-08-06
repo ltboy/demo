@@ -29,14 +29,15 @@ export class DataPickerComponent
   @Input() editable = true;
   @Input() clearable = true;
 
+  @Input() startDate: string
+  @Input() set endDate(val) {
+    console.log(val)
+  }
   @Input() type: string = 'date'; // enum: year/month/date/week/datetime/datetimerange/daterange
   @Input() placeholder: string = '选择日期';
   @Input() format: string = 'yyyy-MM-dd';
   @Input('hidden-day') hiddenDay: boolean = false;
-
-  @Input('panel-absolute') panelAbsolute: boolean = true;
-  @Input('panel-index') panelIndex: number = 200;
-
+  @Input() disabledDate
   // @Input() disabledDateFilter: Function
 
   @Output() modelChange: EventEmitter<string> = new EventEmitter<string>();
@@ -45,13 +46,6 @@ export class DataPickerComponent
   @Output('icon-click')
   iconClick: EventEmitter<Event> = new EventEmitter<Event>();
 
-  @Input()
-  set disabled(val: boolean) {
-    // todo, is discarded.
-    console.warn(
-      'Element Angular: (disabled) is discarded, use [elDisabled] replace it.'
-    );
-  }
   @Input()
   set model(val: any) {
     if (val !== 0 && !val) {
@@ -89,6 +83,7 @@ export class DataPickerComponent
     const time: number = this.dateFormat.getTime(input.target.value);
     // if (!time) {return}
     this.value = time;
+
   }
   // try update input value
   // always trigger emit
@@ -107,6 +102,14 @@ export class DataPickerComponent
   dateChangeHandle(time: number): void {
     this._model = DateFormat.moment(time, this.format);
     this.value = new Date(this._model).getTime();
+    console.log(this.startDate)
+    if (this.value <= new Date(this.startDate).getTime()) {
+      this.value = null
+      this._model = ''
+      this.showPanelPicker = false;
+      // this.modelChange.emit(null);
+      return
+    }
     this.modelChange.emit(this._model);
     this.showPanelPicker = false;
   }
