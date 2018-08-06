@@ -29,7 +29,7 @@ export class YearTableComponent implements OnInit, OnChanges {
   }
 
   updateYearRow(currentYear: number): number[][] {
-    const startYear: number = Math.floor(Math.abs(currentYear) / 10) * 10;
+    const startYear: number = Math.floor(Math.abs(currentYear));
     return [[], [], []].map((v, index) =>
       [0, 1, 2, 3].map(num => startYear + index * 4 + num)
     );

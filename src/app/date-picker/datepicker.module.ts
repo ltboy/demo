@@ -25,8 +25,8 @@ import { MonthTableComponent } from './children/month-table/month-table';
   imports: [CommonModule, FormsModule],
   entryComponents: [DateTableComponent, YearTableComponent, MonthTableComponent]
 })
-export class ElDateModule {
+export class DatepickerModule {
   static forRoot(): ModuleWithProviders {
-    return { ngModule: ElDateModule, providers: [] };
+    return { ngModule: DatepickerModule, providers: [] };
   }
 }

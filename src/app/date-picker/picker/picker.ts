@@ -1,11 +1,12 @@
 import {
   Component,
-  forwardRef,
   OnDestroy,
   OnInit,
-  Renderer2
+  Renderer2,
+  Input,
+  Output,
+  EventEmitter
 } from '@angular/core';
-import { DatePickerProps } from '../picker-props';
 import { DateFormat } from '../utils/format';
 
 @Component({
@@ -15,16 +16,52 @@ import { DateFormat } from '../utils/format';
   ],
   templateUrl: './picker.html'
 })
-export class DataPickerComponent extends DatePickerProps
-  implements OnInit, OnDestroy{
-  showPanelPicker = false;
+export class DataPickerComponent
+  implements OnInit, OnDestroy {
+  showPanelPicker = false
   value: number;
-  model = '';
-  fouce = false
+  _model = '';
+  globalClickListener: Function;
+  globalKeydownListener: Function;
   iconShowClose = false;
+  fouce = false
+  @Input() readonly = false;
+  @Input() editable = true;
+  @Input() clearable = true;
+
+  @Input() type: string = 'date'; // enum: year/month/date/week/datetime/datetimerange/daterange
+  @Input() placeholder: string = '选择日期';
+  @Input() format: string = 'yyyy-MM-dd';
+  @Input('hidden-day') hiddenDay: boolean = false;
+
+  @Input('panel-absolute') panelAbsolute: boolean = true;
+  @Input('panel-index') panelIndex: number = 200;
+
+  // @Input() disabledDateFilter: Function
+
+  @Output() modelChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output('clear-click')
+  clearClick: EventEmitter<Event> = new EventEmitter<Event>();
+  @Output('icon-click')
+  iconClick: EventEmitter<Event> = new EventEmitter<Event>();
+
+  @Input()
+  set disabled(val: boolean) {
+    // todo, is discarded.
+    console.warn(
+      'Element Angular: (disabled) is discarded, use [elDisabled] replace it.'
+    );
+  }
+  @Input()
+  set model(val: any) {
+    if (val !== 0 && !val) {
+      return
+    }
+    this._model = val
+  };
+  @Input() elDisabled = false;
 
   constructor(private dateFormat: DateFormat, private renderer: Renderer2) {
-    super();
   }
 
   iconClickHandle(e: Event): void {
@@ -34,7 +71,7 @@ export class DataPickerComponent extends DatePickerProps
     // use close action
     if (this.iconShowClose) {
       this.clearClick.emit(e);
-      this.model = null;
+      this._model = null;
       this.value = Date.now();
       this.showPanelPicker = false;
       this.iconShowClose = false;
@@ -57,32 +94,31 @@ export class DataPickerComponent extends DatePickerProps
   // always trigger emit
   tryUpdateText(): void {
     if (!this.value) {
-      this.model = null;
+      this._model = null;
       this.modelChange.emit(null);
       this.showPanelPicker = false;
       return;
     }
-    const modelTime: number = new Date(this.model).getTime();
+    const modelTime: number = new Date(this._model).getTime();
     const time: number = this.dateFormat.getTime(this.value);
     this.dateChangeHandle(time ? this.value : modelTime);
   }
 
   dateChangeHandle(time: number): void {
-    this.model = DateFormat.moment(time, this.format);
-    this.value = new Date(this.model).getTime();
-    this.modelChange.emit(this.model);
+    this._model = DateFormat.moment(time, this.format);
+    this.value = new Date(this._model).getTime();
+    this.modelChange.emit(this._model);
     this.showPanelPicker = false;
   }
 
   focusHandle(): void {
-    this.fouce = true
     this.showPanelPicker = true;
+    this.fouce = true;
     this.globalKeydownListener && this.globalKeydownListener();
     this.globalKeydownListener = this.renderer.listen(
       'document',
       'keydown',
       (event: KeyboardEvent) => {
-        console.log(12312);
         if (event.keyCode === 9 || event.keyCode === 27) {
           this.showPanelPicker = false;
           this.globalKeydownListener && this.globalKeydownListener();
@@ -93,7 +129,7 @@ export class DataPickerComponent extends DatePickerProps
       }
     );
   }
-  blurHandle(): void {
+  blurHandle(event): void {
     this.fouce = false;
   }
   // text to time
@@ -106,13 +142,14 @@ export class DataPickerComponent extends DatePickerProps
         return;
       }
       this.showPanelPicker = false;
+      this.tryUpdateText()
     });
     // init value
-    const time: number = this.dateFormat.getTime(this.model);
+    const time: number = this.dateFormat.getTime(this._model);
     if (!time) {
       return;
     }
-    this.model = DateFormat.moment(time, this.format);
+    this._model = DateFormat.moment(time, this.format);
     this.value = time;
   }
 
@@ -120,4 +157,9 @@ export class DataPickerComponent extends DatePickerProps
     this.globalClickListener && this.globalClickListener();
     this.globalKeydownListener && this.globalKeydownListener();
   }
+
+  writeValue(value: any): void {
+    this._model = value;
+  }
+
 }

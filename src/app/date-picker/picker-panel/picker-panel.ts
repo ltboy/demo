@@ -42,7 +42,7 @@ export class DatePickerPanelComponent implements OnInit, OnChanges {
 
   updateDate(): void {
     const date: Date = new Date(this.model);
-    const startYear: number = ~~(date.getFullYear() / 10) * 10;
+    const startYear: number = Math.floor(Math.abs(date.getFullYear()));
     this.dateShowModels = {
       month: date.getMonth(),
       year: date.getFullYear(),
