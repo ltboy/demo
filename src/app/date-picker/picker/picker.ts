@@ -5,58 +5,51 @@ import {
   Renderer2,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef
 } from '@angular/core';
 import { DateFormat } from '../utils/format';
 
 @Component({
   selector: 'app-date-picker',
-  providers: [
-    DateFormat
-  ],
+  providers: [DateFormat],
   templateUrl: './picker.html'
 })
-export class DataPickerComponent
-  implements OnInit, OnDestroy {
-  showPanelPicker = false
-  value: number;
+export class DataPickerComponent implements OnInit, OnDestroy {
+  showPanelPicker = false;
+  value = new Date().getTime();
   _model = '';
   globalClickListener: Function;
   globalKeydownListener: Function;
   iconShowClose = false;
-  fouce = false
+  fouce = false;
   @Input() readonly = false;
   @Input() editable = true;
   @Input() clearable = true;
 
-  @Input() startDate: string
-  @Input() set endDate(val) {
-    console.log(val)
-  }
-  @Input() type: string = 'date'; // enum: year/month/date/week/datetime/datetimerange/daterange
-  @Input() placeholder: string = '选择日期';
-  @Input() format: string = 'yyyy-MM-dd';
-  @Input('hidden-day') hiddenDay: boolean = false;
-  @Input() disabledDate
+  @Input() minTime: string;
+  @Input() maxTime: string;
+  @Input() type = 'date'; // enum: year/month/date/week/datetime/datetimerange/daterange
+  @Input() placeholder = '选择日期';
+  @Input() format = 'yyyy-MM-dd';
+  @Input() hiddenDay = false;
+  @Input() disabledDate;
   // @Input() disabledDateFilter: Function
 
   @Output() modelChange: EventEmitter<string> = new EventEmitter<string>();
-  @Output('clear-click')
-  clearClick: EventEmitter<Event> = new EventEmitter<Event>();
-  @Output('icon-click')
-  iconClick: EventEmitter<Event> = new EventEmitter<Event>();
+  @Output() clearClick: EventEmitter<Event> = new EventEmitter<Event>();
+  @Output() iconClick: EventEmitter<Event> = new EventEmitter<Event>();
 
   @Input()
   set model(val: any) {
     if (val !== 0 && !val) {
-      return
+      return;
     }
-    this._model = val
-  };
+    this._model = val;
+  }
   @Input() elDisabled = false;
 
-  constructor(private dateFormat: DateFormat, private renderer: Renderer2) {
-  }
+  constructor(private dateFormat: DateFormat, private renderer: Renderer2, private changeDetectorRef: ChangeDetectorRef) {}
 
   iconClickHandle(e: Event): void {
     if (this.elDisabled) {
@@ -83,13 +76,13 @@ export class DataPickerComponent
     const time: number = this.dateFormat.getTime(input.target.value);
     // if (!time) {return}
     this.value = time;
-
+    this._model = input.target.value;
   }
   // try update input value
   // always trigger emit
   tryUpdateText(): void {
     if (!this.value) {
-      this._model = null;
+      this._model = '';
       this.modelChange.emit(null);
       this.showPanelPicker = false;
       return;
@@ -102,13 +95,12 @@ export class DataPickerComponent
   dateChangeHandle(time: number): void {
     this._model = DateFormat.moment(time, this.format);
     this.value = new Date(this._model).getTime();
-    console.log(this.startDate)
-    if (this.value <= new Date(this.startDate).getTime()) {
-      this.value = null
-      this._model = ''
+    if (this.value < new Date(this.minTime).getTime() && this.value > new Date(this.maxTime).getTime()) {
+      this.value = null;
+      this._model = '';
+      // this.changeDetectorRef.detectChanges()
       this.showPanelPicker = false;
-      // this.modelChange.emit(null);
-      return
+      return;
     }
     this.modelChange.emit(this._model);
     this.showPanelPicker = false;
@@ -129,6 +121,8 @@ export class DataPickerComponent
         if (event.keyCode === 13) {
           this.tryUpdateText();
         }
+        this.showPanelPicker = true;
+
       }
     );
   }
@@ -139,13 +133,13 @@ export class DataPickerComponent
   ngOnInit(): void {
     this.globalClickListener = this.renderer.listen('document', 'click', () => {
       if (this.fouce) {
-        return
+        return;
       }
       if (!this.showPanelPicker) {
         return;
       }
       this.showPanelPicker = false;
-      this.tryUpdateText()
+      this.tryUpdateText();
     });
     // init value
     const time: number = this.dateFormat.getTime(this._model);
@@ -164,5 +158,4 @@ export class DataPickerComponent
   writeValue(value: any): void {
     this._model = value;
   }
-
 }

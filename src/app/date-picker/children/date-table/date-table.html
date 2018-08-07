@@ -4,7 +4,7 @@
       <th *ngFor="let week of weeks"><span>{{week}}</span></th>
     </tr>
     <tr class="datepick-table__row" *ngFor="let row of tableRows">
-      <td *ngFor="let item of row" [class.available]="item.monthOffset === 0" [class.next-month]="item.monthOffset === 1" [class.prev-month]="item.monthOffset === -1"
+      <td *ngFor="let item of row" [class.available]="item.monthOffset === 0" [class.isdisable]="item.status" [class.next-month]="item.monthOffset === 1" [class.prev-month]="item.monthOffset === -1"
         [class.normal]="item.monthOffset === 0" [class.today]="isToday(item)" [class.current]="isTargetDay(item)" (click)="clickHandle(item)">
         <span>{{item.day}}</span>
       </td>

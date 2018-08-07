@@ -15,7 +15,8 @@ import {
 export class MonthTableComponent implements OnInit, OnChanges {
   @Input() showWeekNumber = false;
   @Input() model: number;
-  @Input() 'disabled-date': any;
+  @Input() minTime: string;
+  @Input() maxTime: string;
   @Output() modelChange: EventEmitter<number> = new EventEmitter<number>();
 
   currentMonth: number;
@@ -28,15 +29,37 @@ export class MonthTableComponent implements OnInit, OnChanges {
   ];
 
   clickHandle(i: number, k: number): void {
+    if (this.isDisable(i, k)) {return; }
     const monthID = 4 * i + k;
     this.currentMonth = monthID;
     this.date.setMonth(monthID);
     this.modelChange.emit(this.date.getTime());
   }
   isCurrentMonth(i: number, k: number): boolean {
+    if (this.isDisable(i, k)) {return false; }
     return this.currentMonth === 4 * i + k;
   }
+  isDisable(i: number, k: number): boolean {
+    if (!this.minTime && !this.maxTime) {
+      return false;
+    }
+    const monthID = 4 * i + k;
+    const year = this.date.getFullYear();
 
+    if (this.minTime) {
+      const min = new Date(this.minTime);
+      if (min.getFullYear() > year || (min.getFullYear() === year && min.getMonth() > monthID)) {
+        return true;
+      }
+    }
+    if (this.maxTime) {
+      const max = new Date(this.maxTime);
+      if (max.getFullYear() > year || (max.getFullYear() === year && max.getMonth() > monthID)) {
+        return true;
+      }
+    }
+    return false;
+  }
   ngOnInit(): void {
     this.date = new Date(this.model);
     this.currentMonth = this.date.getMonth();

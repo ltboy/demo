@@ -25,11 +25,11 @@
       </div>
 
       <div class="datepicker-panel__content">
-        <app-date-table *ngIf="currentView === 'date' && !hiddenDay" (modelChange)="datePickChangeHandle($event)" [model]="model">
+        <app-date-table *ngIf="currentView === 'date' && !hiddenDay" (modelChange)="datePickChangeHandle($event)" [model]="model" [minTime]='minTime' [maxTime]='maxTime'>
         </app-date-table>
-        <app-year-table *ngIf="currentView === 'year'" [model]="model" (modelChange)="yearPickChangeHandle($event)" [disabled-date]="disabledDate">
+        <app-year-table *ngIf="currentView === 'year'" [model]="model" (modelChange)="yearPickChangeHandle($event)" [minTime]='minTime' [maxTime]='maxTime'>
         </app-year-table>
-        <app-month-table *ngIf="currentView === 'month'" [model]="model" (modelChange)="monthPickChangeHandle($event)" [disabled-date]="disabledDate">
+        <app-month-table *ngIf="currentView === 'month'" [model]="model" (modelChange)="monthPickChangeHandle($event)" [minTime]='minTime' [maxTime]='maxTime'>
         </app-month-table>
         <div style="height: 10px;"></div>
       </div>
