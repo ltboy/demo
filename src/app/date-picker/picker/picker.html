@@ -2,7 +2,7 @@
   <input #datepick [class]="'datepick-editor ' + 'datepick-editor--' + type" [readonly]="!editable || readonly" (modelChange)="changeHandle($event)"
     (focus)="focusHandle()" (blur)='blurHandle($event)' [value]="_model" (keyup)='changeHandle($event)' [placeholder]="placeholder"
   />
-  <app-date-picker-panel [minTime]='minTime' [maxTime]='maxTime' (click)="propagationHandle($event)" [show]="showPanelPicker" [hidden-day]="hiddenDay" [panel-absolute]="panelAbsolute"
-    [panel-index]="panelIndex" [model]="value" (modelChange)="dateChangeHandle($event)">
+  <app-date-picker-panel [minTime]='minTime' [maxTime]='maxTime' (click)="propagationHandle($event)" [show]="showPanelPicker"
+    [hidden-day]="hiddenDay" [model]="value" (modelChange)="dateChangeHandle($event)">
   </app-date-picker-panel>
 </div>

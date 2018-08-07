@@ -6,18 +6,17 @@ import {
   Input,
   Output,
   EventEmitter,
-  ChangeDetectorRef
 } from '@angular/core';
 import { DateFormat } from '../utils/format';
 
 @Component({
   selector: 'app-date-picker',
   providers: [DateFormat],
-  templateUrl: './picker.html'
+  templateUrl: './picker.html',
 })
 export class DataPickerComponent implements OnInit, OnDestroy {
   showPanelPicker = false;
-  value = new Date().getTime();
+  value: number;
   _model = '';
   globalClickListener: Function;
   globalKeydownListener: Function;
@@ -49,7 +48,7 @@ export class DataPickerComponent implements OnInit, OnDestroy {
   }
   @Input() elDisabled = false;
 
-  constructor(private dateFormat: DateFormat, private renderer: Renderer2, private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private dateFormat: DateFormat, private renderer: Renderer2) {}
 
   iconClickHandle(e: Event): void {
     if (this.elDisabled) {
@@ -95,10 +94,12 @@ export class DataPickerComponent implements OnInit, OnDestroy {
   dateChangeHandle(time: number): void {
     this._model = DateFormat.moment(time, this.format);
     this.value = new Date(this._model).getTime();
-    if (this.value < new Date(this.minTime).getTime() && this.value > new Date(this.maxTime).getTime()) {
+    if (
+      this.value < new Date(this.minTime).getTime() ||
+      this.value > new Date(this.maxTime).getTime()
+    ) {
       this.value = null;
       this._model = '';
-      // this.changeDetectorRef.detectChanges()
       this.showPanelPicker = false;
       return;
     }
@@ -120,14 +121,15 @@ export class DataPickerComponent implements OnInit, OnDestroy {
         }
         if (event.keyCode === 13) {
           this.tryUpdateText();
+        } else if (this.fouce) {
+          this.showPanelPicker = true;
         }
-        this.showPanelPicker = true;
-
       }
     );
   }
   blurHandle(event): void {
     this.fouce = false;
+    this.globalKeydownListener && this.globalKeydownListener();
   }
   // text to time
   ngOnInit(): void {

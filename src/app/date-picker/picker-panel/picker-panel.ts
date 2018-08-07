@@ -22,13 +22,10 @@ export interface DateModelItem {
 })
 export class DatePickerPanelComponent implements OnInit, OnChanges {
   @Input() show = false;
-  @Input() width: number;
   @Input() model: number;
   @Input() minTime: string;
   @Input() maxTime: string;
   @Input() 'hidden-day' = false;
-  @Input() 'panel-absolute' = true;
-  @Input() 'panel-index' = 200;
   @Output() modelChange: EventEmitter<number> = new EventEmitter<number>();
 
   shortcuts = false;
