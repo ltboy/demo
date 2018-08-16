@@ -3,49 +3,36 @@ import {
   map,
   switchMap,
   shareReplay,
-  tap
+  tap,
+  takeUntil
 } from 'rxjs/operators'
 
 import {
-  timer
+  timer,
+  Subject,
+  Observable
 } from 'rxjs'
 
-const url = 'https://jsonplaceholder.typicode.com/posts?userId='
+const url = 'https://api.icndb.com/jokes/random/5?limitTo=[nerdy]'
 
-const timer$ = timer(0, 2000)
 
-const timer2$ = timer(0, 5000)
+let timer2$ = timer(0, 20000)
 
-// 设置的缓存
-// function _getData(id) {
-//   if (!_getData.cache$) {
-//     _getData.cache$ = Ajax({
-//       url: url + id
-//     }).pipe(
-//       shareReplay(1)
-//     )
-//   }
-//   return _getData.cache$
-// }
+let reload$ = new Subject()
+let cache$ = undefined
 
 export function _getData(id) {
-  if (!_getData.cache$) {
-    _getData.cache$ = timer2$.pipe(
+  if (!cache$) {
+    cache$ = timer2$.pipe(
       switchMap(() => Ajax({
-        url: url + id
+        url
       })),
-      shareReplay(1)
+      takeUntil(reload$), shareReplay(1)
     )
   }
-  return _getData.cache$
+  return cache$
 }
-
-
-
-//  模拟每隔 n s请求一次
-// export function getData(id) {
-//   return timer$.pipe(   
-//     switchMap(() => _getData(id)),
-//     tap(()=>{console.log('wo lai qu zhi le')})
-//   )
-// }
+export function reload() {
+  reload$.next()
+  cache$ = null
+}
