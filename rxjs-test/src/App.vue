@@ -13,9 +13,9 @@
   </div>
 </template>
 <script>
-import { Subject, merge } from 'rxjs';
-import { _getData, reload } from './service';
-import { mergeMap, take, tap, skip, mapTo, switchMap } from 'rxjs/operators';
+import { Subject, merge } from 'rxjs'
+import { _getData, reload } from './service'
+import { mergeMap, take, tap, skip, mapTo, switchMap } from 'rxjs/operators'
 export default {
   data() {
     return {
@@ -23,42 +23,37 @@ export default {
       array: [],
       update$: new Subject(),
       showNote: false,
-      forceReload$: new Subject()
-    };
+      forceReload$: new Subject(),
+    }
   },
   methods: {
     getDataOnce() {
-      return _getData(this.id).pipe(take(1));
+      return _getData(this.id).pipe(take(1))
     },
     forceReload() {
-      reload();
-      this.forceReload$.next();
+      reload()
+      this.forceReload$.next()
     },
     getNotifications() {
-      return _getData().pipe(skip(1));
-    }
+      return _getData().pipe(skip(1))
+    },
   },
   created() {
-    // const update$ = this.update$.pipe(mergeMap(() => this.getDataOnce()));
-    const update$ = merge(this.update$, this.forceReload$).pipe(
-      mergeMap(() => this.getDataOnce())
-    );
+    const update$ = merge(this.update$, this.forceReload$).pipe(mergeMap(() => this.getDataOnce()))
 
-    const initialJokes$ = this.getDataOnce();
+    const initialJokes$ = this.getDataOnce()
 
-    const jokes$ = merge(update$, initialJokes$);
+    const jokes$ = merge(update$, initialJokes$)
     jokes$.subscribe(val => {
-      this.array = val.data.value;
-    });
+      this.array = val.data.value
+    })
 
-    const reload$ = this.forceReload$.pipe(
-      switchMap(() => this.getNotifications())
-    );
+    const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()))
 
-    const show$ = merge(this.getNotifications(), reload$).pipe(mapTo(true));
-    const hide$ = this.update$.pipe(mapTo(false));
-    const showNote = merge(show$, hide$);
-    showNote.subscribe(val => (this.showNote = val));
-  }
-};
+    const show$ = merge(this.getNotifications(), reload$).pipe(mapTo(true))
+    const hide$ = this.update$.pipe(mapTo(false))
+    const showNote = merge(show$, hide$)
+    showNote.subscribe(val => (this.showNote = val))
+  },
+}
 </script>
